@@ -27,8 +27,15 @@ import SaveIcon from '@mui/icons-material/Save';
 import LinkIcon from '@mui/icons-material/Link';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import InstagramIcon from '@mui/icons-material/Instagram';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import axios from 'axios';
+
+// Import Auth components
+import LinkedInAuth from './LinkedInAuth';
+import InstagramAuth from './InstagramAuth';
+import { isAuthenticated } from '../services/linkedinAuthService';
+import { isInstagramAuthenticated } from '../services/instagramService';
 
 const Settings = () => {
   const location = useLocation();
@@ -37,24 +44,34 @@ const Settings = () => {
     postFrequency: 'daily',
     alternateTips: true,
   });
-  
-  const [linkedInStatus, setLinkedInStatus] = useState({
-    connected: false,
-    loading: true,
-    profileId: '',
-  });
+  const [isLinkedInConnected, setIsLinkedInConnected] = useState(false);
+  const [isInstagramConnected, setIsInstagramConnected] = useState(false);
   
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [statusMessage, setStatusMessage] = useState(null);
   
-  // Check URL params for status messages (from OAuth callback)
+  // Check if user is authenticated with LinkedIn and Instagram
   useEffect(() => {
+    setIsLinkedInConnected(isAuthenticated());
+    setIsInstagramConnected(isInstagramAuthenticated());
+    
+    // Load settings from localStorage
+    const savedSettings = localStorage.getItem('linkedin_post_settings');
+    if (savedSettings) {
+      try {
+        setSettings(JSON.parse(savedSettings));
+      } catch (err) {
+        console.error('Error parsing saved settings:', err);
+      }
+    }
+    
+    // Check URL params for status messages (from OAuth callback)
     const params = new URLSearchParams(location.search);
     if (params.get('success') === 'true') {
       setStatusMessage({
         severity: 'success',
-        message: params.get('message') || 'LinkedIn connected successfully!'
+        message: params.get('message') || 'Connection successful!'
       });
     }
     if (params.get('error')) {
@@ -64,54 +81,25 @@ const Settings = () => {
       });
     }
     
-    // Fetch LinkedIn connection status
-    fetchLinkedInStatus();
-  }, [location]);
-  
-  // Fetch LinkedIn connection status
-  const fetchLinkedInStatus = async () => {
-    try {
-      setLinkedInStatus(prev => ({ ...prev, loading: true }));
-      const response = await axios.get('/auth/linkedin/status');
-      setLinkedInStatus({
-        connected: response.data.connected,
-        loading: false,
-        profileId: response.data.profile?.id || '',
-      });
-    } catch (error) {
-      console.error('Error fetching LinkedIn status:', error);
-      setLinkedInStatus({
-        connected: false,
-        loading: false,
-        profileId: '',
+    // Check state from navigation (from Instagram callback)
+    if (location.state?.from === 'instagram-callback') {
+      setStatusMessage({
+        severity: location.state.success ? 'success' : 'error',
+        message: location.state.message
       });
     }
-  };
+  }, [location]);
   
-  // Connect to LinkedIn
-  const connectLinkedIn = () => {
-    window.location.href = '/auth/linkedin/auth';
-  };
-  
-  // Disconnect from LinkedIn
-  const disconnectLinkedIn = async () => {
+  // Save settings to local storage
+  const saveSettings = () => {
     try {
-      await axios.post('/auth/linkedin/disconnect');
-      setLinkedInStatus({
-        connected: false,
-        loading: false,
-        profileId: '',
-      });
-      setStatusMessage({
-        severity: 'success',
-        message: 'LinkedIn disconnected successfully'
-      });
-    } catch (error) {
-      console.error('Error disconnecting LinkedIn:', error);
-      setStatusMessage({
-        severity: 'error',
-        message: 'Failed to disconnect LinkedIn'
-      });
+      localStorage.setItem('linkedin_post_settings', JSON.stringify(settings));
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err) {
+      console.error('Error saving settings:', err);
+      setError('Failed to save settings');
+      setTimeout(() => setError(null), 3000);
     }
   };
   
@@ -126,9 +114,8 @@ const Settings = () => {
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    // In a real app, you would save these to the backend
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), 3000);
+    // Save settings to localStorage
+    saveSettings();
   };
   
   return (
@@ -156,63 +143,37 @@ const Settings = () => {
           <LinkedInIcon color="primary" /> LinkedIn Connection
         </Typography>
         
-        <Card sx={{ mb: 3, mt: 2, borderRadius: 2 }}>
-          <CardContent>
-            {linkedInStatus.loading ? (
-              <Box display="flex" alignItems="center" justifyContent="center" py={2}>
-                <CircularProgress size={30} />
-              </Box>
-            ) : linkedInStatus.connected ? (
-              <Box>
-                <Box display="flex" alignItems="center" mb={2}>
-                  <CheckCircleIcon color="success" sx={{ mr: 1 }} />
-                  <Typography variant="body1">
-                    Connected to LinkedIn
-                  </Typography>
-                  <Chip 
-                    label={`ID: ${linkedInStatus.profileId}`} 
-                    size="small" 
-                    color="primary" 
-                    sx={{ ml: 2 }} 
-                  />
-                </Box>
-                <Typography variant="body2" color="text.secondary">
-                  Your LinkedIn account is connected and ready to post content.
-                </Typography>
-              </Box>
-            ) : (
-              <Box>
-                <Typography variant="body1" mb={1}>
-                  Not connected to LinkedIn
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Connect your LinkedIn account to enable posting JavaScript tips directly to your profile.
-                </Typography>
-              </Box>
-            )}
-          </CardContent>
-          <CardActions>
-            {linkedInStatus.connected ? (
-              <Button
-                startIcon={<LinkOffIcon />}
-                color="error"
-                variant="outlined"
-                onClick={disconnectLinkedIn}
-              >
-                Disconnect LinkedIn
-              </Button>
-            ) : (
-              <Button
-                startIcon={<LinkIcon />}
-                variant="contained"
-                color="primary"
-                onClick={connectLinkedIn}
-              >
-                Connect LinkedIn Account
-              </Button>
-            )}
-          </CardActions>
-        </Card>
+        {/* Use our new LinkedIn Auth component */}
+        <Box sx={{ my: 3 }}>
+          <LinkedInAuth />
+        </Box>
+        
+        <Box sx={{ mt: 3 }}>
+          <Typography variant="body2" color="text.secondary">
+            {isLinkedInConnected 
+              ? "Your LinkedIn account is connected. You can now post content directly to your LinkedIn profile." 
+              : "Connect your LinkedIn account to post JavaScript and React tips directly to your profile."}
+          </Typography>
+        </Box>
+      </Paper>
+      
+      <Paper sx={{ p: 4, mb: 4, borderRadius: 2 }}>
+        <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <InstagramIcon sx={{ color: '#E1306C' }} /> Instagram Connection
+        </Typography>
+        
+        {/* Instagram Auth component */}
+        <Box sx={{ my: 3 }}>
+          <InstagramAuth />
+        </Box>
+        
+        <Box sx={{ mt: 3 }}>
+          <Typography variant="body2" color="text.secondary">
+            {isInstagramConnected 
+              ? "Your Instagram Business account is connected. You can now post images directly to your Instagram profile." 
+              : "Connect your Instagram Business account to post JavaScript and React tips as images."}
+          </Typography>
+        </Box>
       
         {success && (
           <Alert severity="success" sx={{ mb: 3 }}>

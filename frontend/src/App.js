@@ -9,23 +9,42 @@ import PostHistory from './components/PostHistory';
 import CreatePost from './components/CreatePost';
 import Settings from './components/Settings';
 import MCQQuestions from './components/MCQQuestions';
+import LinkedInCallback from './components/LinkedInCallback';
+import InstagramCallback from './components/InstagramCallback';
+import InstagramPost from './components/InstagramPost';
 import AnimationProvider from './components/AnimationProvider';
 import { getPostHistory } from './services/apiService';
+
+// Import local data
+import javascriptTips from './data/javascriptTips.json';
+import reactTips from './data/reactTips.json';
+import mcqQuestions from './data/mcqQuestions.json';
 
 function App() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userData, setUserData] = useState(() => {
+    // Initialize from localStorage if available
+    const savedUserData = localStorage.getItem('linkedin_user_data');
+    return savedUserData ? JSON.parse(savedUserData) : {
+      linkedinToken: '',
+      name: 'User',
+      profilePic: '',
+      isAuthenticated: false
+    };
+  });
   
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        // Get posts from local storage via our modified apiService
         const data = await getPostHistory();
         setPosts(data);
         setLoading(false);
       } catch (err) {
         console.error('Failed to fetch posts:', err);
-        setError('Failed to load post history. Please try again later.');
+        setError('Failed to load post history. Please check your browser storage.');
         setLoading(false);
       }
     };
@@ -120,6 +139,42 @@ function App() {
                   transition={{ duration: 0.4 }}
                 >
                   <Settings />
+                </motion.div>
+              } />
+              <Route path="/auth/linkedin/callback" element={
+                <motion.div
+                  key="linkedin-callback"
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  variants={pageTransition}
+                  transition={{ duration: 0.4 }}
+                >
+                  <LinkedInCallback />
+                </motion.div>
+              } />
+              <Route path="/instagram-callback" element={
+                <motion.div
+                  key="instagram-callback"
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  variants={pageTransition}
+                  transition={{ duration: 0.4 }}
+                >
+                  <InstagramCallback />
+                </motion.div>
+              } />
+              <Route path="/instagram" element={
+                <motion.div
+                  key="instagram"
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  variants={pageTransition}
+                  transition={{ duration: 0.4 }}
+                >
+                  <InstagramPost />
                 </motion.div>
               } />
             </Routes>

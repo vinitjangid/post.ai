@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Container, 
   Typography, 
@@ -19,7 +19,10 @@ import {
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import SendIcon from '@mui/icons-material/Send';
 import DeleteIcon from '@mui/icons-material/Delete';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { createPost, uploadPostImage } from '../services/apiService';
+import { isAuthenticated } from '../services/linkedinAuthService';
+import LinkedInAuth from './LinkedInAuth';
 
 const CreatePost = () => {
   const [postType, setPostType] = useState('tip');
@@ -30,6 +33,12 @@ const CreatePost = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [isLinkedInConnected, setIsLinkedInConnected] = useState(false);
+  
+  // Check if LinkedIn is connected
+  useEffect(() => {
+    setIsLinkedInConnected(isAuthenticated());
+  }, []);
   
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -46,6 +55,13 @@ const CreatePost = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Check if LinkedIn is connected
+    if (!isLinkedInConnected) {
+      setError("You must connect to LinkedIn before creating a post");
+      return;
+    }
+    
     setLoading(true);
     setError(null);
     setSuccess(false);
@@ -91,6 +107,15 @@ const CreatePost = () => {
       </Typography>
       
       <Paper sx={{ p: 4 }}>
+        {!isLinkedInConnected && (
+          <Box sx={{ mb: 3 }}>
+            <Alert severity="warning" sx={{ mb: 2 }}>
+              You need to connect your LinkedIn account to post content.
+            </Alert>
+            <LinkedInAuth />
+          </Box>
+        )}
+      
         {success && (
           <Alert severity="success" sx={{ mb: 3 }}>
             Post created successfully! It will be published to LinkedIn shortly.

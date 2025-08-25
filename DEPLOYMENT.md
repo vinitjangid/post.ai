@@ -1,32 +1,28 @@
-# LinkedIn JS Tips Poster
+# LinkedIn JS Tips Poster - Frontend Only Version
 
-A Node.js application that posts daily JavaScript and React tips to LinkedIn.
+A React application that posts JavaScript and React tips to LinkedIn, using a frontend-only approach.
 
 ## Deployment Guide
 
-This guide explains how to deploy this application to various free hosting platforms.
+This guide explains how to deploy this simplified frontend-only application to various free hosting platforms.
 
-### Option 1: Deploy to Render
+### Option 1: Deploy to Netlify
 
-[Render](https://render.com/) offers free web services that are perfect for Node.js applications.
+[Netlify](https://www.netlify.com/) is perfect for hosting static React applications.
 
-1. Sign up for a free Render account
-2. Create a new Web Service and connect to your GitHub repository
-3. Configure the service:
-   - **Name**: linkedin-js-tips-poster
-   - **Environment**: Node
-   - **Build Command**: `npm install && cd frontend && npm install && npm run build`
-   - **Start Command**: `node src/index.js`
+1. Sign up for a free Netlify account
+2. Connect your GitHub repository
+3. Configure the build settings:
+   - **Base directory**: (leave empty)
+   - **Build command**: `npm run build`
+   - **Publish directory**: `frontend/build`
 4. Add Environment Variables:
    ```
-   NODE_ENV=production
-   LINKEDIN_API_KEY=your_key
-   LINKEDIN_API_SECRET=your_secret
-   LINKEDIN_ACCESS_TOKEN=your_token
-   LINKEDIN_PERSON_ID=your_id
-   LINKEDIN_REDIRECT_URI=https://your-render-url.onrender.com/auth/linkedin/callback
-   MONGODB_URI=your_mongodb_connection_string
-   SESSION_SECRET=your_random_secret
+   REACT_APP_LINKEDIN_CLIENT_ID=your_linkedin_client_id
+   ```
+5. Configure redirects by adding a `_redirects` file in the `frontend/public` directory with:
+   ```
+   /*    /index.html   200
    ```
 5. Deploy the application
 

@@ -18,6 +18,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import AddIcon from '@mui/icons-material/Add';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import InstagramIcon from '@mui/icons-material/Instagram';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
@@ -64,6 +65,7 @@ const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
   { text: 'Post History', icon: <HistoryIcon />, path: '/history' },
   { text: 'Create Post', icon: <AddIcon />, path: '/create' },
+  { text: 'Instagram Post', icon: <InstagramIcon sx={{ color: '#E1306C' }} />, path: '/instagram' },
   { text: 'MCQ Questions', icon: <QuizIcon />, path: '/mcq' },
   { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
 ];

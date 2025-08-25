@@ -1,15 +1,15 @@
 [build]
   base = ""
-  command = "npm install && cd frontend && npm install && npm run build"
+  # More detailed build commands to ensure all dependencies are installed correctly
+  command = "cd frontend && npm install && npm run build"
   publish = "frontend/build"
 
-[functions]
-  directory = "src/functions"
+# Environment variable configuration - add non-sensitive env vars here
+[build.environment]
+  NODE_ENV = "production"
 
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
+# Redirects for the frontend-only version
+# Note: We no longer need the API functions redirect
 
 [[redirects]]
   from = "/*"

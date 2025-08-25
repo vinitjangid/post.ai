@@ -1,0 +1,32 @@
+{
+  "instagramImageTemplates": [
+    {
+      "name": "JavaScript Basic",
+      "background": "linear-gradient(45deg, #FAD961, #F76B1C)",
+      "textColor": "#333333",
+      "secondaryColor": "#FFFFFF",
+      "borderColor": "#F76B1C"
+    },
+    {
+      "name": "JavaScript Advanced",
+      "background": "linear-gradient(45deg, #1A2980, #26D0CE)",
+      "textColor": "#FFFFFF",
+      "secondaryColor": "#E1F5FE",
+      "borderColor": "#26D0CE"
+    },
+    {
+      "name": "React",
+      "background": "linear-gradient(45deg, #000428, #004e92)",
+      "textColor": "#FFFFFF",
+      "secondaryColor": "#61DAFB",
+      "borderColor": "#61DAFB"
+    },
+    {
+      "name": "Dark Code",
+      "background": "#1E1E1E",
+      "textColor": "#FFFFFF",
+      "secondaryColor": "#61AFEF",
+      "borderColor": "#444444"
+    }
+  ]
+}

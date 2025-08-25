@@ -15,6 +15,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import { motion } from 'framer-motion';
+import QuizExperience from './QuizExperience';
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? '' 
@@ -138,6 +139,7 @@ const MCQQuestions = () => {
   const [confirmDialog, setConfirmDialog] = useState({ open: false, mcqId: null });
   const [deleteDialog, setDeleteDialog] = useState({ open: false, postId: null });
   const [successMessage, setSuccessMessage] = useState(null);
+  const [viewMode, setViewMode] = useState('list'); // 'list' or 'quiz'
 
   useEffect(() => {
     fetchMCQs();
@@ -482,6 +484,18 @@ const MCQQuestions = () => {
     setShowFilters(!showFilters);
   };
 
+  // Toggle between list and quiz mode
+  const toggleViewMode = () => {
+    setViewMode(viewMode === 'list' ? 'quiz' : 'list');
+  };
+
+  // Render quiz mode if selected
+  if (viewMode === 'quiz') {
+    // Filter questions according to current filters before passing to QuizExperience
+    const filteredQuestions = filteredMCQs();
+    return <QuizExperience mcqs={filteredQuestions} />;
+  }
+
   return (
     <Container 
       maxWidth="lg" 
@@ -550,9 +564,23 @@ const MCQQuestions = () => {
             sx={{ 
               display: 'flex', 
               alignItems: 'center',
-              ml: { xs: 0, sm: 2 }
+              ml: { xs: 0, sm: 2 },
+              gap: 1
             }}
           >
+            <Button
+              variant={viewMode === 'quiz' ? "contained" : "outlined"}
+              color="primary"
+              onClick={toggleViewMode}
+              startIcon={<QuizIcon />}
+              sx={{
+                borderRadius: 4,
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {viewMode === 'quiz' ? "View List" : "Start Quiz"}
+            </Button>
+            
             <Tooltip title={showFilters ? "Hide filters" : "Show filters"}>
               <IconButton 
                 onClick={toggleFilters}

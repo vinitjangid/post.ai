@@ -1,0 +1,28 @@
+{
+  "posts": [
+    {
+      "id": "instagram_post_1",
+      "date": "2025-08-23T14:30:00.000Z",
+      "content": "Did you know? The optional chaining operator (?.) allows you to safely access nested object properties, even if an intermediate property doesn't exist.\n\n```javascript\nconst user = {};\nconst city = user?.address?.city; // undefined, no error\n```\n\n#javascript #webdev #coding",
+      "image": "https://example.com/instagram_js_tip_1.jpg",
+      "platform": "instagram",
+      "status": "published",
+      "engagement": {
+        "likes": 42,
+        "comments": 7
+      }
+    },
+    {
+      "id": "instagram_post_2",
+      "date": "2025-08-21T10:15:00.000Z",
+      "content": "React Hooks Tip: useEffect cleanup function runs before the component unmounts and before every re-render with changed dependencies.\n\n```jsx\nuseEffect(() => {\n  const subscription = subscribeToData();\n  return () => subscription.unsubscribe(); // Cleanup\n}, []);\n```\n\n#reactjs #javascript #webdevelopment",
+      "image": "https://example.com/instagram_react_tip_1.jpg",
+      "platform": "instagram",
+      "status": "published",
+      "engagement": {
+        "likes": 38,
+        "comments": 5
+      }
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "question": "What is the output of `console.log(typeof null)`?",
+    "options": [
+      "null",
+      "undefined",
+      "object",
+      "string"
+    ],
+    "correctAnswer": "object",
+    "explanation": "In JavaScript, typeof null returns 'object', which is considered a bug in the language.",
+    "category": "javascript",
+    "difficulty": "easy"
+  },
+  {
+    "id": 2,
+    "question": "Which method is used to add elements to the end of an array in JavaScript?",
+    "options": [
+      "push()",
+      "append()",
+      "add()",
+      "insert()"
+    ],
+    "correctAnswer": "push()",
+    "explanation": "The push() method adds one or more elements to the end of an array and returns the new length of the array.",
+    "category": "javascript",
+    "difficulty": "easy"
+  },
+  {
+    "id": 3,
+    "question": "What is a React Hook?",
+    "options": [
+      "A function that lets you hook into React state and lifecycle features from functional components",
+      "A way to hook external libraries into React components",
+      "A method to capture user input",
+      "A special CSS property for React elements"
+    ],
+    "correctAnswer": "A function that lets you hook into React state and lifecycle features from functional components",
+    "explanation": "Hooks are functions that let you 'hook into' React state and lifecycle features from function components.",
+    "category": "react",
+    "difficulty": "medium"
+  },
+  {
+    "id": 4,
+    "question": "What does the spread operator (...) do in JavaScript?",
+    "options": [
+      "It creates a shallow copy of an array or object",
+      "It loops through an array",
+      "It deletes elements from an array",
+      "It merges two functions together"
+    ],
+    "correctAnswer": "It creates a shallow copy of an array or object",
+    "explanation": "The spread operator (...) allows an iterable such as an array or string to be expanded in places where zero or more arguments or elements are expected.",
+    "category": "javascript",
+    "difficulty": "medium"
+  },
+  {
+    "id": 5,
+    "question": "In React, what function is used to update state in a class component?",
+    "options": [
+      "this.updateState()",
+      "this.setState()",
+      "this.changeState()",
+      "this.modifyState()"
+    ],
+    "correctAnswer": "this.setState()",
+    "explanation": "setState() is the built-in React method that is called to update a component's state.",
+    "category": "react",
+    "difficulty": "easy"
+  }
+]

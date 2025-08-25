@@ -60,6 +60,19 @@ ChartJS.register(
 );
 
 const Dashboard = ({ posts, loading, error }) => {
+  const theme = useTheme();
+  // Using the isMobile variable in responsive layout decisions
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [showCharts, setShowCharts] = useState(false);
+  
+  // Animate charts after a short delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowCharts(true);
+    }, 600);
+    return () => clearTimeout(timer);
+  }, []);
+  
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
@@ -126,18 +139,6 @@ const Dashboard = ({ posts, loading, error }) => {
       },
     ],
   };
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [showCharts, setShowCharts] = useState(false);
-
-  // Animate charts after a short delay
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowCharts(true);
-    }, 600);
-    return () => clearTimeout(timer);
-  }, []);
 
   // Animation variants for motion components
   const containerVariants = {
